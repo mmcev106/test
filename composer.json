@@ -1,0 +1,6 @@
+{
+    "require": {
+        "leafs/router": "^0.1.6",
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: client_mysql
+    platform: linux/amd64
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=dev
+      - MYSQL_PASSWORD=dev
+      - MYSQL_DATABASE=git_repositories
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./_docker_data/mysql:/var/lib/mysql
+  website:
+    container_name: php-74
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_DBHOST=mysql
+      - MYSQL_DBPORT=3306
+      - MYSQL_DBUSER=root
+      - MYSQL_DBPASS=dev
+      - MYSQL_DBNAME= git_repositories
+    volumes:
+      - ./_docker_data/php74/vhost:/etc/apache2/sites-enabled
+      - ./:/var/www/html
+
+    ports:
+      - 8081:80
+      - 8084:443
+    depends_on:
+      - mysql
