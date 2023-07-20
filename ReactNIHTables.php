@@ -956,7 +956,7 @@ table { border-collapse: collapse; }
                 foreach ($emailsInProject as $recordId => $recordEmail) {
                     $recordEmail = strtolower($recordEmail);
                     if (in_array($recordEmail, $requestedEmailsInLowerCase) && ($firstNames[$recordId] || $lastNames[$recordId])) {
-                        $translation[$recordEmail] = NameMatcher::formatName($firstNames[$recordId], "", $lastNames[$recordId]);
+                        echo NameMatcher::formatName($firstNames[$recordId], "", $lastNames[$recordId]);
                     }
                 }
             }
