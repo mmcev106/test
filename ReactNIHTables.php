@@ -950,9 +950,9 @@ table { border-collapse: collapse; }
         $translation = [];
         foreach (Application::getPids() as $pid) {
             if (REDCapManagement::isActiveProject($pid)) {
-                $emailsInProject = Download::fastField($pid, "identifier_email");
-                $firstNames = Download::fastField($pid, "identifier_first_name");
-                $lastNames = Download::fastField($pid, "identifier_last_name");
+                $emailsInProject = static::fastField($pid, "identifier_email");
+                $firstNames = static::fastField($pid, "identifier_first_name");
+                $lastNames = static::fastField($pid, "identifier_last_name");
                 foreach ($emailsInProject as $recordId => $recordEmail) {
                     $recordEmail = strtolower($recordEmail);
                     if (in_array($recordEmail, $requestedEmailsInLowerCase) && ($firstNames[$recordId] || $lastNames[$recordId])) {
@@ -962,6 +962,45 @@ table { border-collapse: collapse; }
             }
         }
         return $translation;
+    }
+
+    public static function fastField($pid, $field) {
+	    $values = [];
+
+        $module = Application::getModule();
+	    $sql = "SELECT record, value, instance
+                    FROM redcap_data
+                    WHERE project_id = ?
+                        AND field_name= ?";
+        if ($module) {
+            $q = $module->query($sql, [$pid, $field]);
+        } else {
+            $q = db_query($sql, [$pid, $field]);
+        }
+
+	    $hasMultipleInstances = FALSE;
+	    while ($row = $q->fetch_assoc()) {
+	        if ($row['instance']) {
+	            $hasMultipleInstances = TRUE;
+	            $instance = $row['instance'];
+            } else {
+	            $instance = 1;
+            }
+	        $recordId = $row['record'];
+	        $value = $row['value'];
+	        if (!isset($values[$recordId])) {
+	            $values[$recordId] = [];
+            }
+	        $values[$recordId][$instance] = $value;
+        }
+
+        if (!$hasMultipleInstances) {
+            foreach ($values as $recordId => $instanceValues) {
+                $values[$recordId] = $values[$recordId][1];
+            }
+        }
+
+	    return $values;
     }
 
     public function getUseridsAndNameAssociatedWithEmail($email) {
