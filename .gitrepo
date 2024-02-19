@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:vanderbilt-redcap/external-module-framework-docs.git
 	branch = main
-	commit = 5078b55bb443538b8f9d66a0f65f4ee2eb786226
+	commit = 5d843c18f26e11b8d5c611696d871495f2065a3e
 	parent = bf9e97919790d91afdc6a26a054592d1f0075307
 	method = merge
 	cmdver = 0.4.6
