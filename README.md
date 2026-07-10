@@ -1,5 +1,7 @@
 # foo
 
+[link to section](#custom-id)
+
 asdf
 
 asdf
