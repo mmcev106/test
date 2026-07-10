@@ -1,3 +1,3 @@
 # foo
 
-# doo {#custom-section-id}
+# <a id="available-steps"></a>doo
